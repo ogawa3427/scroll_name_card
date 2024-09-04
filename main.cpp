@@ -12,22 +12,22 @@
 // #include "bexp.h"
 #include "Unit_MiniEncoderC.h"
 
-// #include "ogawa.h"
+#include "ogawa.h"
 // #include "ogawa_aff.h"
 // #include "tw.h"
 
 #define FREEZING_TIME 1000
 #define AUTO_ESCAPE_STEP 3
 
-#include "kaiso.h"
-#include "sinkai.h"
-#include "kaisoku.h"
-#include "huku.h"
-#include "wanman.h"
-#include "liner.h"
-#include "testr.h"
+// #include "kaiso.h"
+// #include "sinkai.h"
+// #include "kaisoku.h"
+// #include "huku.h"
+// #include "wanman.h"
+// #include "liner.h"
+// #include "testr.h"
 
-const uint16_t *imgs[] = {kaiso, sinkai, kaisoku, huku, wanman, liner, testr};
+const uint16_t *imgs[] = {ogawa};//{kaiso, sinkai, kaisoku, huku, wanman, liner, testr};
 const size_t imgCount = sizeof(imgs) / sizeof(imgs[0]);
 uint8_t currentIndex = 0;
 
