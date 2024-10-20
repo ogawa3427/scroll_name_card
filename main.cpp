@@ -12,8 +12,15 @@
 // #include "bexp.h"
 #include "Unit_MiniEncoderC.h"
 
+#include "otetudai.h"
 #include "ogawa.h"
-// #include "ogawa_aff.h"
+#include "gh.h"
+#include "tori.h"
+#include "ogawa_aff.h"
+#include "dev.h"
+#include "ogawa_otetudai.h"
+#include "uji.h"
+#include "takuya.h"
 // #include "tw.h"
 
 #define FREEZING_TIME 1000
@@ -27,7 +34,7 @@
 // #include "liner.h"
 // #include "testr.h"
 
-const uint16_t *imgs[] = {ogawa};//{kaiso, sinkai, kaisoku, huku, wanman, liner, testr};
+const uint16_t *imgs[] = {uji, otetudai, takuya, ogawa_otetudai, otetudai, takuya, qr2};//{kaiso, sinkai, kaisoku, huku, wanman, liner, testr};
 const size_t imgCount = sizeof(imgs) / sizeof(imgs[0]);
 uint8_t currentIndex = 0;
 
@@ -71,6 +78,8 @@ uint32_t lastEncoderValue = 0;
 std::vector<uint16_t> autoEscapeSteps;
 uint16_t autoEscapeStep = 0;
 
+LGFX_Sprite sprite(&M5.Lcd);
+
 void drawImage(const uint16_t *img)
 {
   M5.Lcd.startWrite();
@@ -89,8 +98,7 @@ void drawImage(const uint16_t *img)
 
 void drawCombinedImage(const uint16_t *img1, const uint16_t *img2, uint16_t offset)
 {
-  M5.Lcd.startWrite();
-  int pixelNum = 0;
+  sprite.clear();
 
   // img1からoffset分ずらしてコピー
   for (int y = 0; y < imgHeight - offset; y++)
@@ -98,8 +106,9 @@ void drawCombinedImage(const uint16_t *img1, const uint16_t *img2, uint16_t offs
     for (int x = 0; x < imgWidth; x++)
     {
       uint16_t color = img1[y * imgWidth + x + offset * imgWidth];
-      color = (color >> 8) | (color << 8); // RGB565 (little endian) の色を正しく表示するためにバイト順を入れ替える
-      M5.Lcd.drawPixel(imgHeight - y, x, color);
+      // RGB565 (little endian) の色を正しく表示するためにバイト順を入れ替える
+      color = (color >> 8) | (color << 8);
+      sprite.drawPixel(x, y, color);
     }
   }
 
@@ -109,12 +118,14 @@ void drawCombinedImage(const uint16_t *img1, const uint16_t *img2, uint16_t offs
     for (int x = 0; x < imgWidth; x++)
     {
       uint16_t color = img2[(y - (imgHeight - offset)) * imgWidth + x];
-      color = (color >> 8) | (color << 8); // RGB565 (little endian) の色を正しく表示するためにバイト順を入れ替える
-      M5.Lcd.drawPixel(imgHeight - y, x, color);
+      // RGB565 (little endian) の色を正しく表示するためにバイト順を入れ替える
+      color = (color >> 8) | (color << 8);
+      sprite.drawPixel(x, y, color);
     }
   }
-
-  M5.Lcd.endWrite();
+  
+  // スプライトを画面に転送
+  sprite.pushRotated(90);
 }
 
 void drawTape(const uint16_t *imgs[], uint8_t imgIndex, int16_t currentOffset)
@@ -126,9 +137,14 @@ void drawTape(const uint16_t *imgs[], uint8_t imgIndex, int16_t currentOffset)
 
 void setup()
 {
-  M5.begin();
+  auto cfg = M5.config();
+  M5.begin(cfg);
+  
   sensor.begin(&Wire, MINIENCODERC_ADDR, 0, 26, 100000UL);
   state = AUTO_SCROLL;
+  
+  // スプライトの初期化
+  sprite.createSprite(imgWidth, imgHeight);
 }
 
 void loop()
