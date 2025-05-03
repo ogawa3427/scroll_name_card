@@ -1,40 +1,18 @@
-// #include <M5StickCPlus.h>
 #include <M5Unified.h>
 // #include <TFT_eSPI.h>
 #include <string>
 #include <vector>
-// #include "tb.h"
-// #include "hakutaka.h"
-// #include "hokuto.h"
-// #include "nis.h"
-// #include "sre.h"
-// #include "oexp.h"
-// #include "bexp.h"
 #include "Unit_MiniEncoderC.h"
 
-#include "otetudai.h"
-#include "ogawa.h"
-#include "gh.h"
-#include "tori.h"
-#include "ogawa_aff.h"
-#include "dev.h"
-#include "ogawa_otetudai.h"
-#include "uji.h"
-#include "takuya.h"
-// #include "tw.h"
 
 #define FREEZING_TIME 1000
 #define AUTO_ESCAPE_STEP 3
 
-// #include "kaiso.h"
-// #include "sinkai.h"
-// #include "kaisoku.h"
-// #include "huku.h"
-// #include "wanman.h"
-// #include "liner.h"
-// #include "testr.h"
+#include "blue.h"
+#include "green.h"
+#include "red.h"
 
-const uint16_t *imgs[] = {uji, otetudai, takuya, ogawa_otetudai, otetudai, takuya, qr2};//{kaiso, sinkai, kaisoku, huku, wanman, liner, testr};
+const uint16_t *imgs[] = {b, g, r};
 const size_t imgCount = sizeof(imgs) / sizeof(imgs[0]);
 uint8_t currentIndex = 0;
 
